@@ -18,7 +18,7 @@ class Libxml2Recipe(Recipe):
         with current_directory(self.get_build_dir(arch.arch)):
             env['CC'] += " -I%s" % self.get_build_dir(arch.arch)
             shprint(sh.Command('./configure'),  '--host=arm-linux-eabi',
-                    '--without-modules',  '--without-legacy', '--without-hfinistory',  '--without-debug',  '--without-docbook', '--without-python', '--without-threads', '--without-iconv',
+                    '--without-modules',  '--without-legacy', '--without-history',  '--without-debug',  '--without-docbook', '--without-python', '--without-threads', '--without-iconv',
                     _env=env)
 
             # Ensure we only build libxml2.la as if we do everything
@@ -31,7 +31,7 @@ class Libxml2Recipe(Recipe):
         env = super(Libxml2Recipe, self).get_recipe_env(arch)
         env['CONFIG_SHELL'] = '/bin/bash'
         env['SHELL'] = '/bin/bash'
-        env['CC'] = '/usr/bin/ccache arm-linux-androideabi-gcc -DANDROID -mandroid -fomit-frame-pointer'
+        env['CC'] = 'arm-linux-androideabi-gcc -DANDROID -mandroid -fomit-frame-pointer --sysroot={}'.format(self.ctx.ndk_platform)
         return env
 
 recipe = Libxml2Recipe()

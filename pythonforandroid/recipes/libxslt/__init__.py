@@ -1,5 +1,5 @@
 from pythonforandroid.toolchain import Recipe, shprint, shutil, current_directory
-from os.path import exists, join, dirname, basename
+from os.path import exists, join, dirname
 import sh
 
 class LibxsltRecipe(Recipe):
@@ -36,7 +36,8 @@ class LibxsltRecipe(Recipe):
         env = super(LibxsltRecipe, self).get_recipe_env(arch)
         env['CONFIG_SHELL'] = '/bin/bash'
         env['SHELL'] = '/bin/bash'
-        env['CC'] = '/usr/bin/ccache arm-linux-androideabi-gcc -DANDROID -mandroid -fomit-frame-pointer'
+        env['CC'] = 'arm-linux-androideabi-gcc -DANDROID -mandroid -fomit-frame-pointer --sysroot={}'.format(self.ctx.ndk_platform)
+
         env['LDSHARED'] = "%s -nostartfiles -shared -fPIC" % env['CC']
         return env
 

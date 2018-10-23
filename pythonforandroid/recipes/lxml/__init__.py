@@ -1,10 +1,6 @@
-from pythonforandroid.toolchain import Recipe, shprint, shutil, current_directory
-from pythonforandroid.toolchain import CompiledComponentsPythonRecipe
-from pythonforandroid.util import current_directory, ensure_dir
-from pythonforandroid.logger import debug, shprint, info
+from pythonforandroid.toolchain import Recipe, shutil
+from pythonforandroid.recipe import CompiledComponentsPythonRecipe
 from os.path import exists, join, dirname
-import sh
-import glob
 
 class LXMLRecipe(CompiledComponentsPythonRecipe):
     version = '3.6.0'
@@ -26,8 +22,8 @@ class LXMLRecipe(CompiledComponentsPythonRecipe):
 
     def get_recipe_env(self, arch):
         env = super(LXMLRecipe, self).get_recipe_env(arch)
-        libxslt_recipe = Recipe.get_recipe('libxslt', self.ctx)
-        libxml2_recipe = Recipe.get_recipe('libxml2', self.ctx)
+        libxslt_recipe = Recipe.get_recipe('libxslt', self.ctx).get_build_dir(arch.arch)
+        libxml2_recipe = Recipe.get_recipe('libxml2', self.ctx).get_build_dir(arch.arch)
         targetpython = "%s/include/python2.7/" % dirname(dirname(self.ctx.hostpython))
         env['CC'] += " -I%s/include -I%s -I%s" % (libxml2_recipe, libxslt_recipe, targetpython)
         env['LDSHARED'] = '%s -nostartfiles -shared -fPIC -lpython2.7' % env['CC']
